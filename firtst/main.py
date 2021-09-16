@@ -122,8 +122,8 @@ class Tab(MDFloatLayout, MDTabsBase):
 
 
 class MortgageCalculatorApp(MDApp):
-    title = "Mortgage Calculator"
-    by_who = "author Oleg Shpagin"
+    title = "Expense analyzer"
+    by_who = "by cockradio"
 
     def build(self):
         return Builder.load_string(KV)

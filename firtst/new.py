@@ -1,5 +1,11 @@
 #APK FILE > https://www.youtube.com/watch?v=IqPcO34tUj4&ab_channel=%D0%98%D0%B7%D1%83%D1%87%D0%B0%D0%B5%D0%BC%D0%BC%D0%B8%D1%80%D0%98%D0%A2%2F%D0%9E%D0%BB%D0%B5%D0%B3%D0%A8%D0%BF%D0%B0%D0%B3%D0%B8%D0%BD%2FWISEPLAT
 #1111111111
+
+#pip install kivy
+#pip install kivymd
+#pip install https://github.com/kivymd/KivyMD/archive/3274d62.zip
+
+
 from kivy.lang import Builder
 from kivy.properties import StringProperty, ListProperty
 from kivymd.theming import ThemableBehavior
@@ -152,8 +158,13 @@ class AnalyzatorApp(MDApp):
         self.screen = Builder.load_string(KV)
         # https://kivymd.readthedocs.io/en/latest/components/menu/?highlight=MDDropDownItem#center-position
         # menu_items = [{"icon": "git", "text": f"Item {i}"} for i in range(5)]
-        menu_items = [{"icon": "format-text-rotation-angle-up", "text": "annuity"},
-                      {"icon": "format-text-rotation-angle-down", "text": "differentiated"}]
+        menu_items = [{"icon": "format-text-rotation-angle-up", "text": "продукты"},
+                      {"icon": "format-text-rotation-angle-down", "text": "бытовая химия"},
+                      {"icon": "format-text-rotation-angle-up", "text": "птички"},
+                      {"icon": "format-text-rotation-angle-up", "text": "машина"},
+                      {"icon": "format-text-rotation-angle-up", "text": "проезд"},
+                      {"icon": "format-text-rotation-angle-up", "text": "подарки"},
+                      {"icon": "format-text-rotation-angle-up", "text": "развлечения"}]
         self.menu = MDDropdownMenu(
             caller=self.screen.ids.payment_type,
             items=menu_items,

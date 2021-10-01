@@ -27,6 +27,9 @@ from kivymd.uix.menu import MDDropdownMenu
 from kivy.clock import Clock
 from kivy.metrics import dp
 
+from kivymd.uix.picker import MDDatePicker
+import datetime
+
 KV = '''
 #https://stackoverflow.com/questions/65698145/kivymd-tab-name-containing-icons-and-text
 # this import will prevent disappear tabs through some clicks on them)))
@@ -72,7 +75,9 @@ Screen:
                                         icon: "calendar-month"
                                         
                                     MDTextField:
+                                        id: start_date
                                         hint_text: "Дата покупки"
+                                        on_focus: if self.focus: app.date_dialog.open()
                                 
                                 BoxLayout:
                                     orientation: 'horizontal'                         
@@ -81,6 +86,7 @@ Screen:
                                         icon: "cash"
                                         
                                     MDTextField:
+                                        id: spend
                                         hint_text: "Сколько потрачено"
                                     
 
@@ -101,17 +107,17 @@ Screen:
                         Tab:
                             id: tab2
                             name: 'tab2'
-                            text: f"[size=20][font={fonts[-1]['fn_regular']}]{md_icons['table-large']}[/size][/font] ТАБЛИЦА"
+                            text: f"[size=20][font={fonts[-1]['fn_regular']}]{md_icons['table-large']}[/size][/font] Таблица"
                         
                         Tab:
                             id: tab3
                             name: 'tab3'
-                            text: f"[size=20][font={fonts[-1]['fn_regular']}]{md_icons['chart-areaspline']}[/size][/font] ГРАФИК"
+                            text: f"[size=20][font={fonts[-1]['fn_regular']}]{md_icons['chart-areaspline']}[/size][/font] График"
                         
                         Tab:
                             id: tab4
                             name: 'tab4'
-                            text: f"[size=20][font={fonts[-1]['fn_regular']}]{md_icons['chart-pie']}[/size][/font] ПОЛЕЗНО"
+                            text: f"[size=20][font={fonts[-1]['fn_regular']}]{md_icons['chart-pie']}[/size][/font] Информация"
                         
          
 
@@ -160,11 +166,14 @@ class AnalyzatorApp(MDApp):
         # menu_items = [{"icon": "git", "text": f"Item {i}"} for i in range(5)]
         menu_items = [{"icon": "format-text-rotation-angle-up", "text": "продукты"},
                       {"icon": "format-text-rotation-angle-down", "text": "бытовая химия"},
-                      {"icon": "format-text-rotation-angle-up", "text": "птички"},
-                      {"icon": "format-text-rotation-angle-up", "text": "машина"},
+                      {"icon": "format-text-rotation-angle-up", "text": "здоровье"},
+                      {"icon": "format-text-rotation-angle-up", "text": "автомобиль"},
                       {"icon": "format-text-rotation-angle-up", "text": "проезд"},
                       {"icon": "format-text-rotation-angle-up", "text": "подарки"},
-                      {"icon": "format-text-rotation-angle-up", "text": "развлечения"}]
+                      {"icon": "format-text-rotation-angle-up", "text": "развлечения"},
+                      {"icon": "format-text-rotation-angle-up", "text": "домашние животные"},
+                      {"icon": "format-text-rotation-angle-up", "text": "путешествие"},
+                      {"icon": "format-text-rotation-angle-up", "text": "прочее"},]
         self.menu = MDDropdownMenu(
             caller=self.screen.ids.payment_type,
             items=menu_items,
@@ -172,6 +181,12 @@ class AnalyzatorApp(MDApp):
             width_mult=4,
         )
         self.menu.bind(on_release=self.set_item)
+
+        # https://kivymd.readthedocs.io/en/latest/components/pickers/?highlight=date%20picker#
+        self.date_dialog = MDDatePicker(
+            callback=self.get_date,
+            background_color=(0.2, 0.4, 0.1, 1.0),
+        )
 
 
     def set_item(self, instance_menu, instance_menu_item):
@@ -181,10 +196,25 @@ class AnalyzatorApp(MDApp):
 
         Clock.schedule_once(set_item, 0.2)
 
+
+    def get_date(self, date):
+        '''
+        :type date: <class 'datetime.date'>
+        '''
+        print(date)
+        self.screen.ids.start_date.text = date.strftime("%d-%m-%Y")  # str(date)
+
+
     def build(self):
         return self.screen
 
+
     def on_start(self):
+        self.screen.ids.start_date.text = datetime.date.today().strftime("%d-%m-%Y")
+        self.screen.ids.spend.text = "0"
+        self.screen.ids.payment_type.text = "не выбрано"
+
+        # icons names you can get here: https://materialdesignicons.com/
 
         icons_item_menu_tabs = {
             "calculator-variant": "TEST",  #ab-testing

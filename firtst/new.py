@@ -15,6 +15,12 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.boxlayout import BoxLayout
 from kivymd.font_definitions import fonts
 
+
+from kivymd.uix.label import MDLabel
+from kivymd.uix.menu import MDDropdownMenu
+from kivy.clock import Clock
+from kivy.metrics import dp
+
 KV = '''
 #https://stackoverflow.com/questions/65698145/kivymd-tab-name-containing-icons-and-text
 # this import will prevent disappear tabs through some clicks on them)))
@@ -35,8 +41,6 @@ Screen:
                     MDToolbar:
                         title: app.title
                         elevation: 10
-                        left_action_items: [['menu', lambda x: nav_drawer.set_state("open")]]
-                        right_action_items: [["star-outline", lambda x: app.on_star_click()]]
                         md_bg_color: 0, 0, 0, 1
 
                     MDTabs:
@@ -49,7 +53,7 @@ Screen:
                         Tab:
                             id: tab1
                             name: 'tab1'
-                            text: f"[size=20][font={fonts[-1]['fn_regular']}]{md_icons['calculator-variant']}[/size][/font] Input"
+                            text: f"[size=20][font={fonts[-1]['fn_regular']}]{md_icons['calculator-variant']}[/size][/font] Занести новую покупку"
                         
                             BoxLayout:
                                 orientation: 'vertical'
@@ -62,7 +66,7 @@ Screen:
                                         icon: "calendar-month"
                                         
                                     MDTextField:
-                                        hint_text: "Start date"
+                                        hint_text: "Дата покупки"
                                 
                                 BoxLayout:
                                     orientation: 'horizontal'                         
@@ -71,51 +75,38 @@ Screen:
                                         icon: "cash"
                                         
                                     MDTextField:
-                                        hint_text: "Loan"
+                                        hint_text: "Сколько потрачено"
                                     
-                                BoxLayout:
-                                    orientation: 'horizontal'                                
-                                    
-                                    MDIconButton:
-                                        icon: "clock-time-five-outline"
-                                            
-                                    MDTextField:
-                                        hint_text: "Months"
+
                                     
                                 BoxLayout:
                                     orientation: 'horizontal'                                 
                                     
                                     MDIconButton:
                                         icon: "bank"
-                                            
-                                    MDTextField:
-                                        hint_text: "Interest, %"
                                     
                                     MDTextField:
                                         id: payment_type
-                                        hint_text: "Payment type"
+                                        hint_text: "Выбрать тип расхода"
                                         on_focus: if self.focus: app.menu.open()
+                                    
                                  
                                  
                         Tab:
                             id: tab2
                             name: 'tab2'
-                            text: f"[size=20][font={fonts[-1]['fn_regular']}]{md_icons['table-large']}[/size][/font] Table"
+                            text: f"[size=20][font={fonts[-1]['fn_regular']}]{md_icons['table-large']}[/size][/font] ТАБЛИЦА"
                         
                         Tab:
                             id: tab3
                             name: 'tab3'
-                            text: f"[size=20][font={fonts[-1]['fn_regular']}]{md_icons['chart-areaspline']}[/size][/font] Graph"
+                            text: f"[size=20][font={fonts[-1]['fn_regular']}]{md_icons['chart-areaspline']}[/size][/font] ГРАФИК"
                         
                         Tab:
                             id: tab4
                             name: 'tab4'
-                            text: f"[size=20][font={fonts[-1]['fn_regular']}]{md_icons['chart-pie']}[/size][/font] Chart"
+                            text: f"[size=20][font={fonts[-1]['fn_regular']}]{md_icons['chart-pie']}[/size][/font] ПОЛЕЗНО"
                         
-                        Tab:
-                            id: tab5
-                            name: 'tab5'
-                            text: f"[size=20][font={fonts[-1]['fn_regular']}]{md_icons['book-open-variant']}[/size][/font] Sum"
          
 
 
@@ -151,17 +142,41 @@ class Tab(MDFloatLayout, MDTabsBase):
     pass
 
 
-class MortgageCalculatorApp(MDApp):
-    title = "ANALYZER"
+class AnalyzatorApp(MDApp):
+    title = "АНАЛИЗАТОР РАСХОДОВ"
     by_who = "cockradio"
 
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.screen = Builder.load_string(KV)
+        # https://kivymd.readthedocs.io/en/latest/components/menu/?highlight=MDDropDownItem#center-position
+        # menu_items = [{"icon": "git", "text": f"Item {i}"} for i in range(5)]
+        menu_items = [{"icon": "format-text-rotation-angle-up", "text": "annuity"},
+                      {"icon": "format-text-rotation-angle-down", "text": "differentiated"}]
+        self.menu = MDDropdownMenu(
+            caller=self.screen.ids.payment_type,
+            items=menu_items,
+            position="auto",
+            width_mult=4,
+        )
+        self.menu.bind(on_release=self.set_item)
+
+
+    def set_item(self, instance_menu, instance_menu_item):
+        def set_item(interval):
+            self.screen.ids.payment_type.text = instance_menu_item.text
+            instance_menu.dismiss()
+
+        Clock.schedule_once(set_item, 0.2)
+
     def build(self):
-        return Builder.load_string(KV)
+        return self.screen
 
     def on_start(self):
 
         icons_item_menu_tabs = {
-            "calculator-variant": "Input",  #ab-testing
+            "calculator-variant": "TEST",  #ab-testing
             "table-large": "Table",
             "chart-areaspline": "Graph",
             "chart-pie": "Chart",  # chart-arc
@@ -169,12 +184,12 @@ class MortgageCalculatorApp(MDApp):
         }
 
 
-        for icon_name, name_tab in icons_item_menu_tabs.items():
-            self.root.ids.tabs.add_widget(
-                Tab(
-                    text=f"[size=20][font={fonts[-1]['fn_regular']}]{md_icons[icon_name]}[/size][/font] {name_tab}"
-                )
-            )
+        #for icon_name, name_tab in icons_item_menu_tabs.items():
+        #    self.root.ids.tabs.add_widget(
+        #        Tab(
+        #            text=f"[size=20][font={fonts[-1]['fn_regular']}]{md_icons[icon_name]}[/size][/font] {name_tab}"
+        #        )
+        #    )
 
     def on_tab_switch(self, instance_tabs, instance_tab, instance_tab_label, tab_text):
         '''Called when switching tabs.
@@ -191,4 +206,4 @@ class MortgageCalculatorApp(MDApp):
         print("star clicked!")
 
 
-MortgageCalculatorApp().run()
+AnalyzatorApp().run()

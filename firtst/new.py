@@ -1,5 +1,5 @@
 #APK FILE > https://www.youtube.com/watch?v=IqPcO34tUj4&ab_channel=%D0%98%D0%B7%D1%83%D1%87%D0%B0%D0%B5%D0%BC%D0%BC%D0%B8%D1%80%D0%98%D0%A2%2F%D0%9E%D0%BB%D0%B5%D0%B3%D0%A8%D0%BF%D0%B0%D0%B3%D0%B8%D0%BD%2FWISEPLAT
-#1111111111
+#1111111111555
 
 #pip install kivy
 #pip install kivymd
@@ -30,11 +30,18 @@ from kivy.metrics import dp
 from kivymd.uix.picker import MDDatePicker
 import datetime
 
+#для сохранения информации
+from kivy.storage.jsonstore import JsonStore
+from kivy.base import runTouchApp
+from kivy.properties import ObjectProperty
+
 KV = '''
 #https://stackoverflow.com/questions/65698145/kivymd-tab-name-containing-icons-and-text
 # this import will prevent disappear tabs through some clicks on them)))
 #:import md_icons kivymd.icon_definitions.md_icons
 #:import fonts kivymd.font_definitions.fonts
+
+
 
 Screen:
 

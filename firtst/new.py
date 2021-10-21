@@ -4,7 +4,7 @@
 #pip install kivy
 #pip install kivymd
 #pip install https://github.com/kivymd/KivyMD/archive/3274d62.zip
-#остановился на том что нужно занести в функцию калктэйбл, точнее передать переменную с полей ввода
+#остановился на том что нужно занести в функцию калктэйбл, точнее передать переменную с полей вводаNEW
 
 
 from kivy.lang import Builder

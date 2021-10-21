@@ -4,6 +4,7 @@
 #pip install kivy
 #pip install kivymd
 #pip install https://github.com/kivymd/KivyMD/archive/3274d62.zip
+#остановился на том что нужно занести в функцию калктэйбл, точнее передать переменную с полей ввода
 
 
 from kivy.lang import Builder
@@ -34,6 +35,25 @@ import datetime
 from kivy.storage.jsonstore import JsonStore
 from kivy.base import runTouchApp
 from kivy.properties import ObjectProperty
+
+store = JsonStore('hello.json')
+
+# put some values
+store.put('tito', name='Mathieu', org='kivy')
+store.put('tshirtman', name='Gabriel', age=27)
+
+# using the same index key erases all previously added key-value pairs
+store.put('tito', name='Mathieu', age=30)
+
+# get a value using a index key and key
+print('tito is', store.get('tito')['age'])
+
+# or guess the key/entry for a part of the key
+for item in store.find(name='Gabriel'):
+    print('tshirtmans index key is', item[0])
+    print('his key value pairs are', str(item[1]))
+
+
 
 KV = '''
 #https://stackoverflow.com/questions/65698145/kivymd-tab-name-containing-icons-and-text
@@ -109,7 +129,30 @@ Screen:
                                         hint_text: "Выбрать тип расхода"
                                         on_focus: if self.focus: app.menu.open()
                                     
-                                 
+                                MDSeparator:
+                                    height: "1dp"
+                                    
+                                
+                                BoxLayout:
+                                    orientation: 'horizontal'
+                                    
+                                    AnchorLayout:
+                                        anchor_x: 'center'
+                                
+                                        MDRectangleFlatIconButton:
+                                            icon: "android"
+                                            text: "ЗАНЕСТИ"
+                                            theme_text_color: "Custom"
+                                            text_color: 1, 0, 1, 1
+                                            line_color: 0, 0, 0, 1
+                                            icon_color: 1, 0, 0, 1
+                                            md_bg_color: 0.1, 0.1, 0.1, 1
+                                            adaptive_width: True
+                                            on_release: app.calc_table(*args)
+                                            background_color: (0.1, 0.1, 0.1, 1.0)
+                                            size_hint_y: .5
+                                    
+
                                  
                         Tab:
                             id: tab2
@@ -252,6 +295,14 @@ class AnalyzatorApp(MDApp):
 
     def on_star_click(self):
         print("star clicked!")
+
+
+    def calc_table(self, *args):
+        print("button1 pressed")
+
+        store.put('cockradio', name='Petuh', age=32)
+
+        pass
 
 
 AnalyzatorApp().run()

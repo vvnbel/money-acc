@@ -210,6 +210,10 @@ class AnalyzatorApp(MDApp):
 
 
     def __init__(self, **kwargs):
+        #добавлено 2 снизу
+        self._data = {}
+        self._is_changed = True
+
         super().__init__(**kwargs)
         self.screen = Builder.load_string(KV)
         # https://kivymd.readthedocs.io/en/latest/components/menu/?highlight=MDDropDownItem#center-position
@@ -224,6 +228,11 @@ class AnalyzatorApp(MDApp):
                       {"icon": "format-text-rotation-angle-up", "text": "домашние животные"},
                       {"icon": "format-text-rotation-angle-up", "text": "путешествие"},
                       {"icon": "format-text-rotation-angle-up", "text": "прочее"},]
+
+        def store_put(self, key, value):
+            self._data[key] = value
+            self._is_changed = True
+            return True
         self.menu = MDDropdownMenu(
             caller=self.screen.ids.payment_type,
             items=menu_items,
@@ -299,8 +308,21 @@ class AnalyzatorApp(MDApp):
 
     def calc_table(self, *args):
         print("button1 pressed")
+        start_date = self.screen.ids.start_date.text
 
-        store.put('cockradio', name='Petuh', age=32)
+        payment_type = self.screen.ids.payment_type.text
+        spend = self.screen.ids.spend.text
+
+        if store.exists('cockradio'):
+            print('tite exists:', store.get('tito2'))
+            store.put('new')
+
+
+        store.put('new', payment_type=payment_type, date=start_date, spend=spend)
+        self.screen.ids.start_date.text = datetime.date.today().strftime("%d-%m-%Y")
+        self.screen.ids.spend.text = "0"
+        self.screen.ids.payment_type.text = "не выбрано"
+
 
         pass
 
